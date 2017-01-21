@@ -1,5 +1,6 @@
 const service = require('feathers-sequelize');
 const Promise = require("bluebird");
+const hooks = require("feathers-hooks-common");
 
 module.exports = function() {
   const app = this;
@@ -24,12 +25,28 @@ module.exports = function() {
 
   app.use('/users/:id/rollcalls', {
     create: function(data, params) {
-      return User.findById(params.id, {include: [RollCall]}).then(user => {
+      return User.findById(params.id).then(user => {
         return RollCall.create(data).then(rollCall => {
-          user.setRollcalls(rollCall);
+          user.addCreatedRollCall(rollCall);
           return rollCall;
         })
       })
+    },
+
+    find: function(params) {
+      return User.findById(params.id).then(user => {
+        return user.getAllRollCalls();
+      });
     }
   });
+
+  function checkClassId(values) {
+    const errors = {};
+    if (!Object.keys(values).includes('classId')) {
+      errors.classId = "No class id provided."
+    }
+    return errors;
+  }
+
+  app.service('users/:id/rollcalls').before({create: [hooks.validate(checkClassId)]})
 };

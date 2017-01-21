@@ -15,4 +15,10 @@ module.exports = function(app, sequelize) {
     }
   }, {tableName: 'rollcalls'});
 
+  RollCall.associate = function() {
+    const Class = app.get('models').Class;
+    const RollCall = app.get('models').RollCall;
+    RollCall.belongsTo(Class, {foreignKey: 'classId'});
+  }
+
 };

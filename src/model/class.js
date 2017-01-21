@@ -12,7 +12,7 @@ module.exports = function(app, sequelize) {
     const User = app.get('models').User;
     const Class = app.get('models').Class;
     const UserClass = app.get('models').UserClass;
-    Class.belongsToMany(User, {through: UserClass});
+    Class.belongsToMany(User, {through: UserClass, foreignKey: 'classId'});
   }
 
   Class.Instance.prototype.getStudents = function() {

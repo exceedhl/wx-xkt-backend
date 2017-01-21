@@ -1,5 +1,6 @@
 const service = require('feathers-sequelize');
 const Promise = require("bluebird");
+const hooks = require('feathers-hooks');
 
 module.exports = function(){
   const app = this;
@@ -12,6 +13,11 @@ module.exports = function(){
   };
 
   app.use('/classes', service(options));
+
+  app.service('classes').before({
+    patch: hooks.disable(),
+    create: hooks.disable()
+  });
 
   app.use('/classes/:id/users/:userId', {
     create: (data, params) => {
@@ -27,4 +33,5 @@ module.exports = function(){
       });
     }
   });
+
 };
