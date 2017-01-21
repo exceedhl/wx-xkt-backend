@@ -1,0 +1,7 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "mysql": "mysql://root:123456@localhost:3306/ftest",
+  "public": "../public/",
+  "wxAppId": "wx-app"
+}

@@ -1,0 +1,7 @@
+{
+  "host": "backend-app.feathersjs.com",
+  "port": 80,
+  "mysql": "DATABASE_URL",
+  "public": "../public/",
+  "wxAppId": "TOBEFILLED"
+}
