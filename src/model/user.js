@@ -35,6 +35,7 @@ module.exports = function(app, sequelize) {
     return this.getClasses({through: {where: {role: 'student'}}});
   };
 
+  // a lot of get models in multiple instance methods, could be better?
   User.Instance.prototype.getJoinedRollCalls = function() {
     const RollCall = app.get('models').RollCall;
     const Class = app.get('models').Class;

@@ -14,6 +14,7 @@ module.exports = function() {
   require('./user-class')(app, sequelize);
   require('./class')(app, sequelize);
   require('./rollcall')(app, sequelize);
+  require('./rollcall-detail')(app, sequelize);
 
   app.set('models', sequelize.models);
 

@@ -36,11 +36,13 @@
     "passport": "^0.3.2",
     "sequelize": "^3.29.0",
     "serve-favicon": "^2.3.2",
-    "winston": "^2.3.0"
+    "winston": "^2.3.0",
+    "ws": "^1.1.1"
   },
   "devDependencies": {
     "jshint": "^2.9.4",
     "mocha": "^3.2.0",
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "sequelize-cli": "^2.5.1"
   }
 }

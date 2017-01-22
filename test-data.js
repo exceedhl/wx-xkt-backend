@@ -17,14 +17,15 @@ const ClassModel = app.get('models').Class;
 const UserModel = app.get('models').User;
 const UserClassModel = app.get('models').UserClass;
 const RollCallModel = app.get('models').RollCall;
+const RollCallDetailModel = app.get('models').RollCallDetail;
 
-ClassModel.sync({'force': true}).then(function() {
+ClassModel.sync().then(function() {
   ClassModel.create({name: '物流管理基础一班'});
   ClassModel.create({name: '物流管理基础三班'});
   ClassModel.create({name: '大一三班'});
   ClassModel.create({name: '基础三班'});
 }).then(() => {
-  UserModel.sync({'force': true}).then(function() {
+  UserModel.sync().then(function() {
     for (var i = 0; i < 100; i++) {
       UserModel.create({
         name: faker.fake('{{name.firstName}}{{name.lastName}}'),
@@ -36,7 +37,9 @@ ClassModel.sync({'force': true}).then(function() {
     }
   })
 }).then(() => {
-  UserClassModel.sync({force: true});
+  UserClassModel.sync();
 }).then(() => {
-  RollCallModel.sync({force: true});
+  RollCallModel.sync();
+}).then(() => {
+  RollCallDetailModel.sync();
 });
