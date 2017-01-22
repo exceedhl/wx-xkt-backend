@@ -16,9 +16,8 @@ module.exports = function() {
 
   app.use('/users/:id/classes', {
     create: function(data, params) {
-      return Promise.all([Class.create(data), User.findById(params.id)])
-      .spread((c, user) => {
-        return c.addOwner(user).then(() => {return c});
+      return User.findById(params.id).then(user => {
+        return user.createOwnClass(data);
       });
     }
   });

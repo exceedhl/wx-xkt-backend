@@ -29,6 +29,7 @@ module.exports = function(app, sequelize) {
   };
 
   Class.Instance.prototype.addOwner = function(user) {
+    console.log('in add owner')
     return this.addUser(user, {role: 'owner'});
   }
 
