@@ -2,6 +2,7 @@
 const userService = require('./user-service');
 const classService = require('./class-service');
 const rollcallService = require('./rollcall-service');
+const authService = require('./authenticate-service');
 const globalHooks = require('../hooks');
 const hooks = require('feathers-hooks');
 
@@ -11,12 +12,15 @@ module.exports = function() {
   app.configure(userService);
   app.configure(classService);
   app.configure(rollcallService);
+  app.configure(authService);
 
   const before = {
-    all: [globalHooks.wxAppAuth()]
+    all: [globalHooks.wxAppAuth, globalHooks.authHook]
   };
 
   for (var key in app.services) {
+    if (key != 'wx-login') {
       app.services[key].before(before);
+    }
   }
 };

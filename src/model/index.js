@@ -1,13 +1,14 @@
 'use strict';
 
 const Sequelize = require('sequelize');
+const logger = require('winston');
 
 module.exports = function() {
 
   const app = this;
   const sequelize = new Sequelize(app.get('mysql'), {
     dialect: 'mysql',
-    logging: console.log
+    logging: logger.debug
   });
 
   require('./user')(app, sequelize);
@@ -17,6 +18,7 @@ module.exports = function() {
   require('./rollcall-detail')(app, sequelize);
 
   app.set('models', sequelize.models);
+  app.set('sequelize', sequelize);
 
   Object.keys(sequelize.models).forEach(modelName => {
     if ('associate' in sequelize.models[modelName]) {

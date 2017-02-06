@@ -1,12 +1,9 @@
 const service = require('feathers-sequelize');
 const Promise = require("bluebird");
-const hooks = require("feathers-hooks-common");
 
 module.exports = function() {
   const app = this;
   const User = app.get('models').User;
-  const Class = app.get('models').Class;
-  const RollCall = app.get('models').RollCall;
 
   const options = {
     Model: User
@@ -14,38 +11,18 @@ module.exports = function() {
 
   app.use('/users', service(options));
 
-  app.use('/users/:id/classes', {
-    create: function(data, params) {
-      return User.findById(params.id).then(user => {
-        return user.createOwnClass(data);
-      });
-    }
-  });
-
-  app.use('/users/:id/rollcalls', {
-    create: function(data, params) {
-      return User.findById(params.id).then(user => {
-        return RollCall.create(data).then(rollCall => {
-          user.addCreatedRollCall(rollCall);
-          return rollCall;
-        })
-      })
-    },
-
+  app.use('/profile', {
     find: function(params) {
-      return User.findById(params.id).then(user => {
-        return user.getAllRollCalls();
-      });
+      return Promise.resolve(params.currentUser);
     }
   });
 
-  function checkClassId(values) {
-    const errors = {};
-    if (!Object.keys(values).includes('classId')) {
-      errors.classId = "No class id provided."
+  app.use('/changename', {
+    update: function(id, data, params) {
+      console.log('in changeme')
+      console.log(data)
+      return params.currentUser.update(data);
     }
-    return errors;
-  }
+  });
 
-  app.service('users/:id/rollcalls').before({create: [hooks.validate(checkClassId)]})
 };

@@ -31,15 +31,11 @@ module.exports = {
           type: Sequelize.DATE
         },
         name: {
-          type: Sequelize.STRING,
-          allowNull: false
+          type: Sequelize.STRING
         },
-        age: {
-          type: Sequelize.INTEGER
-        },
-        gender: Sequelize.STRING,
         avatarUrl: Sequelize.STRING,
-        nickName: Sequelize.STRING
+        nickName: Sequelize.STRING,
+        wxUnionId: Sequelize.STRING
       });
     }).then(() => {
       console.log("create users classes")

@@ -19,7 +19,8 @@
     "test": "npm run jshint && npm run mocha",
     "jshint": "jshint src/. test/. --config",
     "start": "node src/",
-    "mocha": "mocha test/ --recursive"
+    "mocha": "mocha test/ --recursive",
+    "gensslcert": "openssl req -x509 -newkey rsa:4096 -keyout config/ssl/key.pem -out config/ssl/cert.pem -days 365 -nodes"
   },
   "dependencies": {
     "body-parser": "^1.16.0",
@@ -32,8 +33,10 @@
     "feathers-hooks": "^1.7.1",
     "feathers-rest": "^1.6.0",
     "feathers-sequelize": "^1.4.0",
+    "jsonwebtoken": "^7.2.1",
     "mysql": "^2.12.0",
     "passport": "^0.3.2",
+    "request-promise": "^4.1.1",
     "sequelize": "^3.29.0",
     "serve-favicon": "^2.3.2",
     "winston": "^2.3.0",

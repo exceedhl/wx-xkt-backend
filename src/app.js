@@ -34,4 +34,6 @@ app.use(compress())
   .configure(services)
   .configure(middleware);
 
+app.logger.level = app.get('logLevel');
+
 module.exports = app;

@@ -7,15 +7,11 @@ module.exports = function(app, sequelize) {
 
   const User = sequelize.define('User', {
     name: {
-      type: Sequelize.STRING,
-      allowNull: false
+      type: Sequelize.STRING
     },
-    age: {
-      type: Sequelize.INTEGER
-    },
-    gender: Sequelize.STRING,
     avatarUrl: Sequelize.STRING,
-    nickName: Sequelize.STRING
+    nickName: Sequelize.STRING,
+    wxUnionId: Sequelize.STRING
   }, {tableName: 'users'});
 
   User.associate = function() {
@@ -55,12 +51,40 @@ module.exports = function(app, sequelize) {
   };
 
   User.Instance.prototype.getAllRollCalls = function() {
-    const Class = app.get('models').Class;
-    return Promise.all([this.getJoinedRollCalls(),
-      this.getCreatedRollCalls({include: [{model: Class}]})])
-      .spread((joined, created) => {
-      return joined.concat(created);
+    return Promise.all([this.getMyRollCalls(), this.getMyJoinedRollCalls()]).spread((rcs1, rcs2) => {
+      return rcs1.concat(rcs2);
     });
+  };
+
+  User.Instance.prototype.getMyRollCalls = function() {
+    return sequelize.query(
+      `select RC.id as id,
+        RC.name as name,
+        RC.status as status,
+        RC.createdAt as createdAt,
+        'owner' as role,
+        C.name as className
+      from rollcalls as RC
+      inner join classes as C
+      where C.id = RC.classId and RC.ownerId = ` + this.get('id'), { type: sequelize.QueryTypes.SELECT, raw: true })
+      .then(rcs => {
+          return rcs;
+        });
+  };
+
+  User.Instance.prototype.getMyJoinedRollCalls = function() {
+    return sequelize.query(
+      `select RC.id as id,
+        RC.name as name,
+        RC.status as status,
+        RC.createdAt as createdAt,
+        'student' as role,
+        C.name as className
+      from rollcalls as RC, classes as C, users_classes as UC
+      where C.id = RC.classId and UC.classId = RC.classId and UC.role = 'student' and UC.userId = ` + this.get('id'), { type: sequelize.QueryTypes.SELECT, raw: true })
+      .then(rcs => {
+          return rcs;
+        });
   };
 
 };

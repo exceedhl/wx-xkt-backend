@@ -4,7 +4,7 @@ const assert = require('assert');
 const app = require('../src/app');
 const WebSocket = require('ws');
 
-describe('CallWebSocket', function() {
+describe.skip('CallWebSocket', function() {
   before(function(done) {
     this.server = app.listen(3030);
     this.server.once('listening', () => done());

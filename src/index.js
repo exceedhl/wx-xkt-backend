@@ -1,9 +1,12 @@
 'use strict';
 
 const app = require('./app');
-const port = app.get('port');
-const server = app.listen(port);
+const fs = require('fs');
+const https  = require('https');
 
-server.on('listening', () =>
-  console.log(`Feathers application started on ${app.get('host')}:${port}`)
-);
+const server = https.createServer({
+  key: fs.readFileSync('./config/ssl/key.pem'),
+  cert: fs.readFileSync('./config/ssl/cert.pem')
+}, app).listen(app.get('port'));
+
+app.setup(server);

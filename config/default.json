@@ -1,7 +1,17 @@
 {
   "host": "localhost",
-  "port": 3030,
+  "port": 8443,
   "mysql": "mysql://root:123456@localhost:3306/ftest",
   "public": "../public/",
-  "wxAppId": "wx-app"
+  "wxAppId": "wx-app",
+  "logLevel": "debug",
+  "auth": {
+    "token": {
+      "secret": "/pJKkQzWGrH4C4FKFyhpIYdbpkXYm6mwa5fBe8isF58Zf1ktnKQzNy7P5A4ATzyX+smhbxFpJWbjFcMc1KeyAA=="
+    }
+  },
+  "wx": {
+    "appId": "wxce638b3ba4959343",
+    "appSecret": "1b4d33799bd0b0724d7db398fd232a47"
+  }
 }

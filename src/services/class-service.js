@@ -1,6 +1,4 @@
-const service = require('feathers-sequelize');
 const Promise = require("bluebird");
-const hooks = require('feathers-hooks');
 
 module.exports = function(){
   const app = this;
@@ -8,15 +6,26 @@ module.exports = function(){
   const User = app.get('models').User;
   const Class = app.get('models').Class;
 
-  const options = {
-    Model: Class
-  };
+  app.use('/classes', {
+    find: function(params) {
+      return params.currentUser.getCreatedClasses();
+    },
 
-  app.use('/classes', service(options));
+    create: function(data, params) {
+      return params.currentUser.createOwnClass(data);
+    },
 
-  app.service('classes').before({
-    patch: hooks.disable(),
-    create: hooks.disable()
+    update: function(id, data, params) {
+      return Class.findById(id).then(c => {
+        return c.update(data);
+      });
+    }
+  });
+
+  app.use('joinedClasses', {
+    find: function(params) {
+      return params.currentUser.getJoinedClasses();
+    }
   });
 
   app.use('/classes/:id/users/:userId', {
