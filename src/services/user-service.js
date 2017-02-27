@@ -19,8 +19,6 @@ module.exports = function() {
 
   app.use('/changename', {
     update: function(id, data, params) {
-      console.log('in changeme')
-      console.log(data)
       return params.currentUser.update(data);
     }
   });

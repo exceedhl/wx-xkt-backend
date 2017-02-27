@@ -26,6 +26,7 @@
     "body-parser": "^1.16.0",
     "compression": "^1.6.2",
     "cors": "^2.8.1",
+    "express-ws": "^2.0.0",
     "feathers": "^2.0.3",
     "feathers-authentication": "^0.7.12",
     "feathers-configuration": "^0.3.3",
@@ -43,8 +44,11 @@
     "ws": "^1.1.1"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
     "jshint": "^2.9.4",
     "mocha": "^3.2.0",
+    "optimist": "^0.6.1",
     "request": "^2.79.0",
     "sequelize-cli": "^2.5.1"
   }

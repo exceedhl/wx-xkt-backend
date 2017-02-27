@@ -1,7 +1,6 @@
 'use strict';
 
-const errors = require('feathers-errors');
-const jwt = require('jsonwebtoken');
+const checkJWT = require('./check-jwt');
 
 // Add any common hooks you want to share across services in here.
 //
@@ -16,22 +15,8 @@ exports.wxAppAuth = function(hook) {
 };
 
 exports.authHook = function(hook) {
-  const User = hook.app.get('models').User;
-  const authorization = hook.params.headers.authorization;
-  if (!authorization) {
-    throw new errors.NotAuthenticated("No Authorization header found");
-  }
-  let token = authorization.split(/\s/)[1];
-  if (!token) {
-    throw new errors.NotAuthenticated("No JWT token found");
-  }
-  const tokenSecret = hook.app.get('auth').token.secret;
-  const decoded = jwt.verify(token, tokenSecret);
-  return User.findById(decoded.id).then(user => {
-    if (!user) {
-      throw new errors.NotAuthenticated("No user found");
-    }
+  return checkJWT(hook.app, hook.params.headers).then(user => {
     hook.params.currentUser = user;
     return hook;
-  })
+  });
 }

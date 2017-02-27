@@ -50,7 +50,6 @@ module.exports = function(){
   app.use('/rollcalls', {
     find: function(params) {
       return params.currentUser.getAllRollCalls().then(rcs => {
-        console.log(rcs)
         let calls = [];
         rcs.forEach(rc => {
           let data = {};
