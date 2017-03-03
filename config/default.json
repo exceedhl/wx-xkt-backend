@@ -1,6 +1,6 @@
 {
   "host": "localhost",
-  "port": 8443,
+  "port": 3031,
   "mysql": "mysql://root:123456@localhost:3306/ftest",
   "public": "../public/",
   "wxAppId": "wx-app",
