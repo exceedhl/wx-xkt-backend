@@ -9,6 +9,7 @@ module.exports = function(){
   const app = this;
   const User = app.get('models').User;
   const RollCall = app.get('models').RollCall;
+  const sequelize = app.get('sequelize');
 
   const dateKeyFormat = 'YYYY年MMMDo';
 
@@ -67,6 +68,36 @@ module.exports = function(){
       });
     },
 
+    get: function(id, params) {
+      return sequelize.query(
+      `select U.id as id
+        from rollcalls_detail as RCD
+        inner join users as U
+        where RCD.status = 'attend' and RCD.userId = U.id and RCD.rollcallId = ` + id,
+        { type: sequelize.QueryTypes.SELECT, raw: true }).then(attends => {
+          let attendIds = attends.map((u) => {
+            return u.id;
+          });
+          return sequelize.query(
+          `select 'absent' as status,
+            U.avatarUrl as avatarUrl,
+            U.name as name,
+            U.id as id
+            from users_classes as UC,
+            rollcalls as RC,
+            users as U
+            where UC.userId = U.id and UC.role = 'student' and UC.classId = RC.classId and RC.id = ` + id,
+            { type: sequelize.QueryTypes.SELECT, raw: true }).then(all => {
+              for (let u of all) {
+                if (attendIds.includes(u.id)) {
+                  u.status = 'attend';
+                }
+              }
+              return all;
+            })
+        });
+    },
+
     create: function(data, params) {
       data.name = moment().format('HH:mm') + '的点名';
       return params.currentUser.createCreatedRollCall(data);
@@ -87,6 +118,14 @@ module.exports = function(){
 
   app.service('rollcalls').before({create: [hooks.validate(checkClassId)]});
 
+  app.use('/rollcalls/:id/summary', {
+    find: function(params) {
+      return RollCall.findById(params.id).then(rc => {
+        return rc.getSummary();
+      });
+    }
+  });
+
   app.use('/rollcalls/:id/barcode', {
     find: function(id, params) {
       const appId = app.get('wx').appId;
@@ -105,16 +144,13 @@ module.exports = function(){
         const options = {
           method: 'POST',
           uri: barcodeUrl,
+          encoding: 'binary',
           body: {
             path: 'pages/rollcall/ongoing?id=' + params.id
           },
           json: true
         };
         return rp(options).then(body => {
-          // fs.writeFile('barcode.jpg', new Buffer(body.body), function(err){
-          //   if (err) throw err;
-          //   console.log('File saved.');
-          // });
           return Buffer.from(body, 'binary').toString('base64');
         });
       });

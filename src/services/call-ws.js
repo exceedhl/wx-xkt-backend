@@ -88,7 +88,7 @@ module.exports = function(){
                 callDetailData.push({status: status, userId: userId, rollcallId: rcID});
               }
               RollCallDetail.bulkCreate(callDetailData).then(() => {
-                app.logger.debug('RollCall ' + rcID + ' detail stored.')
+                app.logger.debug('RollCall ' + rcID + ' detail stored.');
               });
               break;
             default:

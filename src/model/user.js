@@ -66,10 +66,7 @@ module.exports = function(app, sequelize) {
         C.name as className
       from rollcalls as RC
       inner join classes as C
-      where C.id = RC.classId and RC.ownerId = ` + this.get('id'), { type: sequelize.QueryTypes.SELECT, raw: true })
-      .then(rcs => {
-          return rcs;
-        });
+      where C.id = RC.classId and RC.ownerId = ` + this.get('id'), { type: sequelize.QueryTypes.SELECT, raw: true });
   };
 
   User.Instance.prototype.getMyJoinedRollCalls = function() {
@@ -81,10 +78,7 @@ module.exports = function(app, sequelize) {
         'student' as role,
         C.name as className
       from rollcalls as RC, classes as C, users_classes as UC
-      where C.id = RC.classId and UC.classId = RC.classId and UC.role = 'student' and UC.userId = ` + this.get('id'), { type: sequelize.QueryTypes.SELECT, raw: true })
-      .then(rcs => {
-          return rcs;
-        });
+      where C.id = RC.classId and UC.classId = RC.classId and UC.role = 'student' and UC.userId = ` + this.get('id'), { type: sequelize.QueryTypes.SELECT, raw: true });
   };
 
 };
