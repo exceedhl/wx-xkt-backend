@@ -68,6 +68,7 @@ module.exports = function(){
               let seconds = parseInt(data.seconds);
               state.set('incall', true);
               state.set('code', data.code);
+              broadcast(JSON.stringify({message: 'TimerStarted', payload: {rollcallId: rcID, seconds: seconds}}));
               Promise.delay(seconds * 1000).then(() => {
                 state.set('incall', false);
                 broadcast(JSON.stringify({message: 'TimeOut', payload: {rollcallId: rcID}}));
