@@ -107,9 +107,9 @@ module.exports = function(){
       return RollCall.destroy({where: {id: id}});
     },
 
-    update(id, data, params) {
+    update: function(id, data, params) {
       return RollCall.findById(id).then(rc =>{
-        return rc.update(params);
+        return rc.update(data);
       });
     }
   });
