@@ -92,9 +92,6 @@ module.exports = function(){
               RollCallDetail.bulkCreate(callDetailData).then(() => {
                 app.logger.debug('RollCall ' + rcID + ' detail stored.');
               });
-              RollCall.findById(rcID).then(rc => {
-                rc.update({'status': 'done'});
-              });
               break;
             default:
           }

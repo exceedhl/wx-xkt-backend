@@ -105,6 +105,12 @@ module.exports = function(){
 
     remove: function(id) {
       return RollCall.destroy({where: {id: id}});
+    },
+
+    update(id, data, params) {
+      return RollCall.findById(id).then(rc =>{
+        return rc.update(params);
+      });
     }
   });
 
