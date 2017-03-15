@@ -108,6 +108,14 @@ module.exports = function(){
     }
   });
 
+  app.use('/rollcalls/:id/join', {
+    create: function(data, params) {
+      return RollCall.findById(params.id).then(rc => {
+        return rc.addStudent(params.currentUser);
+      });
+    }
+  });
+
   function checkClassId(values) {
     const errors = {};
     if (!Object.keys(values).includes('classId')) {

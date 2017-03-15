@@ -35,12 +35,12 @@
     "feathers-rest": "^1.6.0",
     "feathers-sequelize": "^1.4.0",
     "jsonwebtoken": "^7.2.1",
+    "log4js": "^1.1.1",
     "mysql": "^2.12.0",
     "passport": "^0.3.2",
     "request-promise": "^4.1.1",
     "sequelize": "^3.29.0",
     "serve-favicon": "^2.3.2",
-    "winston": "^2.3.0",
     "ws": "^1.1.1"
   },
   "devDependencies": {

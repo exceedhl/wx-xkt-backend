@@ -15,6 +15,7 @@ if (process.env.NODE_ENV == 'development') {
 
 module.exports = function(){
   const app = this;
+  const RollCall = app.get('models').RollCall;
   const RollCallDetail = app.get('models').RollCallDetail;
   const expressWs = require('express-ws')(app);
 
@@ -90,6 +91,9 @@ module.exports = function(){
               }
               RollCallDetail.bulkCreate(callDetailData).then(() => {
                 app.logger.debug('RollCall ' + rcID + ' detail stored.');
+              });
+              RollCall.findById(rcID).then(rc => {
+                rc.update({'status': 'done'});
               });
               break;
             default:

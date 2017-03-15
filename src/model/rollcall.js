@@ -21,6 +21,18 @@ module.exports = function(app, sequelize) {
     RollCall.belongsTo(Class, {foreignKey: 'classId'});
   }
 
+  RollCall.Instance.prototype.addStudent = function(user) {
+    return this.getClass().then(c => {
+      return c.includeUser(parseInt(user.get('id'))).then(result => {
+        if (!result) {
+          return c.addStudent(user);
+        } else {
+          return Promise.resolve("User already in Class.");
+        }
+      });
+    });
+  }
+
   RollCall.Instance.prototype.getSummary = function() {
     return sequelize.query(
     `select count(*) as peopleAttend

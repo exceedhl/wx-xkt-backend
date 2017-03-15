@@ -1,14 +1,13 @@
 'use strict';
 
 const Sequelize = require('sequelize');
-const logger = require('winston');
 
 module.exports = function() {
 
   const app = this;
   const sequelize = new Sequelize(app.get('mysql'), {
     dialect: 'mysql',
-    logging: logger.debug
+    logging: (msg) => app.logger.debug(msg)
   });
 
   require('./user')(app, sequelize);

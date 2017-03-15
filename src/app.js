@@ -10,6 +10,7 @@ const configuration = require('feathers-configuration');
 const hooks = require('feathers-hooks');
 const rest = require('feathers-rest');
 const bodyParser = require('body-parser');
+const log4js = require('log4js');
 
 const middleware = require('./middleware');
 const setHeaders = require('./middleware/set-headers');
@@ -19,6 +20,9 @@ const services = require('./services');
 const app = feathers();
 
 app.configure(configuration(path.join(__dirname, '..')));
+
+app.logger = log4js.getLogger();
+app.logger.setLevel(app.get('logLevel'));
 
 app.use(compress())
   .options('*', cors())
@@ -34,6 +38,5 @@ app.use(compress())
   .configure(services)
   .configure(middleware);
 
-app.logger.level = app.get('logLevel');
 
 module.exports = app;
