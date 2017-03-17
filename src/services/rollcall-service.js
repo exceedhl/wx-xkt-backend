@@ -70,33 +70,7 @@ module.exports = function(){
     },
 
     get: function(id, params) {
-      return sequelize.query(
-      `select U.id as id
-        from rollcalls_detail as RCD
-        inner join users as U
-        where RCD.status = 'attend' and RCD.userId = U.id and RCD.rollcallId = ` + id,
-        { type: sequelize.QueryTypes.SELECT, raw: true }).then(attends => {
-          let attendIds = attends.map((u) => {
-            return u.id;
-          });
-          return sequelize.query(
-          `select 'absent' as status,
-            U.avatarUrl as avatarUrl,
-            U.name as name,
-            U.id as id
-            from users_classes as UC,
-            rollcalls as RC,
-            users as U
-            where UC.userId = U.id and UC.role = 'student' and UC.classId = RC.classId and RC.id = ` + id,
-            { type: sequelize.QueryTypes.SELECT, raw: true }).then(all => {
-              for (let u of all) {
-                if (attendIds.includes(u.id)) {
-                  u.status = 'attend';
-                }
-              }
-              return all;
-            })
-        });
+      return RollCall.findById(id);
     },
 
     create: function(data, params) {
@@ -140,6 +114,38 @@ module.exports = function(){
       return RollCall.findById(params.id).then(rc => {
         return rc.getSummary();
       });
+    }
+  });
+
+  app.use('/rollcalls/:id/detail', {
+    find: function(params) {
+      return sequelize.query(
+      `select U.id as id
+        from rollcalls_detail as RCD
+        inner join users as U
+        where RCD.status = 'attend' and RCD.userId = U.id and RCD.rollcallId = ` + params.id,
+        { type: sequelize.QueryTypes.SELECT, raw: true }).then(attends => {
+          let attendIds = attends.map((u) => {
+            return u.id;
+          });
+          return sequelize.query(
+          `select 'absent' as status,
+            U.avatarUrl as avatarUrl,
+            U.name as name,
+            U.id as id
+            from users_classes as UC,
+            rollcalls as RC,
+            users as U
+            where UC.userId = U.id and UC.role = 'student' and UC.classId = RC.classId and RC.id = ` + params.id,
+            { type: sequelize.QueryTypes.SELECT, raw: true }).then(all => {
+              for (let u of all) {
+                if (attendIds.includes(u.id)) {
+                  u.status = 'attend';
+                }
+              }
+              return all;
+            })
+        });
     }
   });
 
