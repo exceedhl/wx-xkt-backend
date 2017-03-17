@@ -9,6 +9,7 @@ module.exports = function(){
   const app = this;
   const User = app.get('models').User;
   const RollCall = app.get('models').RollCall;
+  const RollCallDetail = app.get('models').RollCallDetail;
   const sequelize = app.get('sequelize');
 
   const dateKeyFormat = 'YYYY年MMMDo';
@@ -104,7 +105,9 @@ module.exports = function(){
     },
 
     remove: function(id) {
-      return RollCall.destroy({where: {id: id}});
+      return RollCallDetail.destroy({where: {rollcallId: id}}).then(() => {
+        return RollCall.destroy({where: {id: id}});
+      });
     },
 
     update: function(id, data, params) {
