@@ -80,6 +80,8 @@ module.exports = function(){
                 state.get('users').set(user.get('id'), 'attend');
                 ws.send(JSON.stringify({message: 'CodeCompare', payload: {result: true}}));
                 broadcast(JSON.stringify({message: 'Attends', payload: {rollcallId: rcID, no: getAttends(state.get('users'))}}));
+              } else {
+                ws.send(JSON.stringify({message: 'CodeCompare', payload: {result: false}}));
               }
               break;
             case 'EndCall':
