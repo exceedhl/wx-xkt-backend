@@ -64,11 +64,18 @@ module.exports = function(){
           switch (messageType) {
             case 'JoinCall':
               state.get('users').set(user.get('id'), 'absent');
+              let secondsLeft = null;
+              if (state.get('incall')) {
+                secondsLeft = Math.floor(state.get('seconds') - (Date.now() - state.get('startTime')) / 1000);
+              }
+              ws.send(JSON.stringify({message: 'CurrentState', payload: {code: state.get('code'), attends: getAttends(state.get('users')), incall: state.get('incall'), seconds: secondsLeft}}));
               break;
             case 'StartTimer':
               let seconds = parseInt(data.seconds);
               state.set('incall', true);
               state.set('code', data.code);
+              state.set('startTime', Date.now());
+              state.set('seconds', seconds);
               broadcast(JSON.stringify({message: 'TimerStarted', payload: {rollcallId: rcID, seconds: seconds}}));
               Promise.delay(seconds * 1000).then(() => {
                 state.set('incall', false);
