@@ -8,6 +8,7 @@ moment.locale('zh-CN');
 module.exports = function(){
   const app = this;
   const User = app.get('models').User;
+  const Class = app.get('models').Class;
   const RollCall = app.get('models').RollCall;
   const RollCallDetail = app.get('models').RollCallDetail;
   const sequelize = app.get('sequelize');
@@ -70,7 +71,9 @@ module.exports = function(){
     },
 
     get: function(id, params) {
-      return RollCall.findById(id);
+      return RollCall.findAll({where: {id: id}, include: [{model: Class}]}).then(rcs => {
+        return rcs[0];
+      });
     },
 
     create: function(data, params) {
