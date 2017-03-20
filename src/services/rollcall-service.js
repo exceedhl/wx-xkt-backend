@@ -13,43 +13,6 @@ module.exports = function(){
   const RollCallDetail = app.get('models').RollCallDetail;
   const sequelize = app.get('sequelize');
 
-  const dateKeyFormat = 'YYYY年MMMDo';
-
-  function groupCallsByDay(calls) {
-    let callsByDays = {};
-    calls.forEach(call => {
-      let key = call.dateKey;
-      if (!callsByDays[key]) {
-        callsByDays[key] = [];
-      }
-      callsByDays[key].push(call);
-    });
-    return callsByDays;
-  }
-
-  function groupDayCallsByYearMonth(callsByDays) {
-    let months = {};
-    Object.keys(callsByDays).forEach(date => {
-      const createdAt = moment(date, dateKeyFormat);
-      const yearMonth = createdAt.format('YYYY年MMM');
-      const day = createdAt.format('Do');
-      const weekDay = createdAt.format('ddd');
-      if (!months[yearMonth]) {
-        months[yearMonth] = [];
-      }
-      months[yearMonth].push({'calls': callsByDays[date], 'day': day, 'weekDay': weekDay});
-    });
-    let callsByYearMonth = [];
-    Object.keys(months).forEach(yearMonth => {
-      callsByYearMonth.push({'yearMonth': yearMonth, 'days': months[yearMonth]});
-    })
-    return callsByYearMonth;
-  }
-
-  function compareTimeDesc(a, b) {
-    return a.createdAt < b.createdAt;
-  }
-
   app.use('/rollcalls', {
     find: function(params) {
       return params.currentUser.getAllRollCalls().then(rcs => {
@@ -57,7 +20,6 @@ module.exports = function(){
         rcs.forEach(rc => {
           let data = {};
           data.createdAt = rc.createdAt;
-          data.dateKey = moment(rc.createdAt).format(dateKeyFormat);
           data.name = rc.name;
           data.class = rc.className;
           data.status = rc.status;
@@ -65,8 +27,7 @@ module.exports = function(){
           data.role = rc.role;
           calls.push(data);
         });
-        calls.sort(compareTimeDesc);
-        return groupDayCallsByYearMonth(groupCallsByDay(calls));
+        return calls;
       });
     },
 
@@ -82,12 +43,14 @@ module.exports = function(){
     },
 
     remove: function(id) {
+      // should add ownership check
       return RollCallDetail.destroy({where: {rollcallId: id}}).then(() => {
         return RollCall.destroy({where: {id: id}});
       });
     },
 
     update: function(id, data, params) {
+      // should add ownership check
       return RollCall.findById(id).then(rc =>{
         return rc.update(data);
       });
