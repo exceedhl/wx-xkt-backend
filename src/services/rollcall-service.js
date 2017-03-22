@@ -135,7 +135,7 @@ module.exports = function(){
           uri: barcodeUrl,
           encoding: 'binary',
           body: {
-            path: 'pages/rollcall/ongoing?id=' + params.id
+            path: 'pages/rollcall/student_ongoing?id=' + params.id
           },
           json: true
         };
