@@ -116,7 +116,7 @@ module.exports = function(){
   });
 
   app.use('/rollcalls/:id/barcode', {
-    find: function(id, params) {
+    find: function(params) {
       const appId = app.get('wx').appId;
       const appSecret = app.get('wx').appSecret;
       const url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' + appId + '&secret=' + appSecret;
@@ -135,7 +135,7 @@ module.exports = function(){
           uri: barcodeUrl,
           encoding: 'binary',
           body: {
-            path: 'pages/rollcall/student_ongoing?id=' + params.id
+            path: '/pages/rollcall/student_ongoing?id=' + params.id
           },
           json: true
         };
